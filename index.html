@@ -23,7 +23,7 @@
     <script type="module">
         import { io } from "socket.io-client";
 
-        const socket = io('http://localhost:3000');
+        const socket = io('https://tradingview-broadcast-test.vercel.app');
         socket.on("screenData", (data) => {
             const canvas = document.getElementById("screenCanvas");
             const ctx = canvas.getContext('2d');
