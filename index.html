@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screen Broadcast</title>
+    <!-- Including Socket.IO client library from CDN -->
+</head>
+
+<body>
+    <!-- Canvas element instead of img -->
+    <canvas id="screenCanvas" style="width: 100%; height: auto; display: block; max-width: 100%;"></canvas>
+
+    <script type="importmap">
+        {
+          "imports": {
+            "socket.io-client": "https://cdn.socket.io/4.7.5/socket.io.esm.min.js"
+          }
+        }
+    </script>
+
+    <script type="module">
+        import { io } from "socket.io-client";
+
+        const socket = io('http://localhost:3000');
+        socket.on("screenData", (data) => {
+            const canvas = document.getElementById("screenCanvas");
+            const ctx = canvas.getContext('2d');
+            const image = new Image();
+            image.onload = function () {
+                // Adjust canvas size to the image size
+                canvas.width = image.width;
+                canvas.height = image.height;
+                // Draw the image onto the canvas
+                ctx.drawImage(image, 0, 0);
+            };
+            // Convert base64 image data to a format that can be used for the image source
+            image.src = `data:image/png;base64,${data.buffer}`;
+        });
+    </script>
+</body>
+
+</html>
